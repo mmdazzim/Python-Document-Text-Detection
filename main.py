@@ -13,7 +13,7 @@ file_path = filedialog.askopenfilename()
 image = cv2.imread(file_path)
 original = cv2.imread(file_path)
 
-# Image Colour Conversion -> Adding Gaussian Blur -> Get Threshold
+# Image Colour Conversion -> Get Threshold
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 thresh = cv2.threshold(gray, 190, 255, cv2.THRESH_BINARY_INV)[1]
 
@@ -33,8 +33,9 @@ horizontalSize = horizontalCols / scale
 horizontalStructure = cv2.getStructuringElement(cv2.MORPH_RECT, (int(horizontalSize), 1))
 
 # Perform erosion & dilation
-horizontal = cv2.erode(horizontal, horizontalStructure)
-horizontal = cv2.dilate(horizontal, horizontalStructure)
+#horizontal = cv2.erode(horizontal, horizontalStructure)
+#horizontal = cv2.dilate(horizontal, horizontalStructure)
+horizontal = cv2.morphologyEx(horizontal, cv2.MORPH_OPEN, horizontalStructure)
 
 # Repeat the same process for vertical from horizontal
 verticalRows = vertical.shape[0]
@@ -43,8 +44,9 @@ verticalSize = int(verticalSize)
 
 verticalStructure = cv2.getStructuringElement(cv2.MORPH_RECT, (1, verticalSize))
 
-vertical = cv2.erode(vertical, verticalStructure)
-vertical = cv2.dilate(vertical, verticalStructure)
+#vertical = cv2.erode(vertical, verticalStructure)
+#vertical = cv2.dilate(vertical, verticalStructure)
+vertical = cv2.morphologyEx(vertical, cv2.MORPH_OPEN, verticalStructure)
 
 # create a mask that combine both horizontal & vertical
 # to make up the table in the image
