@@ -85,7 +85,10 @@ for c in text_ctns:
 table_ctns = cv2.findContours(threshold_justTable_dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 for c in table_ctns:
     x, y, w, h = cv2.boundingRect(c)
-    cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    
+# Convert from BGR to RGB for pyplot imshow
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 custom_lines = [Line2D([0], [0], color='g', lw=2),
                 Line2D([0], [0], color='r', lw=2)]
