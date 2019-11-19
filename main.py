@@ -5,6 +5,8 @@ from tkinter import filedialog
 from matplotlib import pyplot as pt
 from matplotlib.lines import Line2D
 
+# IMPORTANT!! Please check for the file chooser dialog in the background during runtime
+
 # File Selection using tkinter
 root = tk.Tk()
 root.withdraw()
@@ -32,9 +34,7 @@ horizontalSize = horizontalCols / scale
 # Get SE for searching for lines process
 horizontalStructure = cv2.getStructuringElement(cv2.MORPH_RECT, (int(horizontalSize), 1))
 
-# Perform erosion & dilation
-#horizontal = cv2.erode(horizontal, horizontalStructure)
-#horizontal = cv2.dilate(horizontal, horizontalStructure)
+# Perform erosion & dilation(opening)
 horizontal = cv2.morphologyEx(horizontal, cv2.MORPH_OPEN, horizontalStructure)
 
 # Repeat the same process for vertical from horizontal
@@ -43,9 +43,6 @@ verticalSize = verticalRows / scale
 verticalSize = int(verticalSize)
 
 verticalStructure = cv2.getStructuringElement(cv2.MORPH_RECT, (1, verticalSize))
-
-#vertical = cv2.erode(vertical, verticalStructure)
-#vertical = cv2.dilate(vertical, verticalStructure)
 vertical = cv2.morphologyEx(vertical, cv2.MORPH_OPEN, verticalStructure)
 
 # create a mask that combine both horizontal & vertical
@@ -70,11 +67,11 @@ threshold_justTable = cv2.bitwise_and(thresh, mask)
 threshold_noTable = cv2.bitwise_and(thresh, mask_noTable)
 
 # additional SE for dilation
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+SE = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 
 # dilation process for both noTable and justTable
-threshold_noTable_dilate = cv2.dilate(threshold_noTable, kernel, iterations=4)
-threshold_justTable_dilate = cv2.dilate(threshold_justTable, kernel, iterations=4)
+threshold_noTable_dilate = cv2.dilate(threshold_noTable, SE, iterations=4)
+threshold_justTable_dilate = cv2.dilate(threshold_justTable, SE, iterations=4)
 
 # text contours, to highlight text paragraphs
 # in green border line
@@ -104,7 +101,7 @@ pt.subplot(1, 2, 2)
 pt.title('Analysed Document')
 pt.imshow(image)
 pt.legend(custom_lines, ['Text', 'Table'])
-pt.show(block=True)
+pt.show()
 
 
 
